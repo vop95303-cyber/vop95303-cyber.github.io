@@ -66,7 +66,7 @@
         .form-group input:focus, .form-group textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
 
         /* Trạng thái thông báo gửi Form */
-        #form-status { margin-top: 15px; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
+        #form-status { margin-bottom: 20px; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
         #form-status.success { display: block; background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; }
         #form-status.error { display: block; background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
 
@@ -193,7 +193,6 @@
                         <div class="contact-wrapper">
                             <form id="ajax-contact-form" action="https://formspree.io/f/mredlzwj" method="POST" class="contact-form">
                                 
-                                <!-- Honeypot Field chống Spam Bot -->
                                 <input type="text" name="_gotcha" style="display:none">
 
                                 <div class="form-group">
@@ -208,11 +207,12 @@
                                     <label for="form-msg">Nội dung yêu cầu *</label>
                                     <textarea id="form-msg" name="message" rows="4" required placeholder="Ví dụ: Cần bóc tách bản vẽ và báo giá hệ thống tủ điện chính..."></textarea>
                                 </div>
+
+                                <div id="form-status"></div>
+
                                 <button type="submit" id="submit-btn" class="btn btn-danger" style="width: 100%; padding: 12px; font-weight: bold;">
                                     🚀 Gửi Yêu Cầu Tư Vấn
                                 </button>
-                                
-                                <div id="form-status"></div>
                             </form>
                             <a href="https://zalo.me/0866097658" target="_blank" rel="noopener noreferrer" class="btn contact-btn" style="background-color: #0068ff; color: white;">💬 Chat Qua Zalo Hoặc Gọi Trực Tiếp</a>
                         </div>
@@ -264,6 +264,7 @@
             .finally(() => {
                 submitBtn.disabled = false;
                 submitBtn.innerText = "🚀 Gửi Yêu Cầu Tư Vấn";
+                status.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         });
     </script>
