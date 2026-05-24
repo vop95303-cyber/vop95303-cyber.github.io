@@ -85,12 +85,50 @@
         .btn-danger { background-color: #e74c3c; color: white; width: auto; }
         .btn-danger:hover { background-color: #c0392b; }
 
-        /* Khối hiển thị Danh sách */
+        /* --- CSS CHO KHỐI DỰ ÁN CUỘN DỌC TỰ ĐỘNG --- */
         .box-full { background: white; padding: 25px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; }
-        .project-list, .activity-list { list-style: none; }
-        .project-list li, .activity-list li { padding: 14px 0; border-bottom: 1px dashed #e1e8ed; display: flex; align-items: flex-start; font-size: 15px; }
-        .project-list li:last-child, .activity-list li:last-child { border-bottom: none; }
-        .badge { background: #e8f4fd; color: #3498db; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 12px; shrink: 0; white-space: nowrap; }
+        
+        .project-marquee-container {
+            height: 280px; /* Khống chế chiều cao cố định để web không bị dài */
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+        }
+        
+        .project-list {
+            list-style: none;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            animation: scrollVertical 35s linear infinite; /* Chạy dọc tự động */
+        }
+        
+        /* Khi di chuột qua danh sách, hoạt ảnh cuộn sẽ tạm dừng */
+        .project-marquee-container:hover .project-list {
+            animation-play-state: paused;
+        }
+        
+        .project-list li { 
+            padding: 14px 0; 
+            border-bottom: 1px dashed #e1e8ed; 
+            display: flex; 
+            align-items: flex-start; 
+            font-size: 15px; 
+            background: #fff;
+        }
+        
+        @keyframes scrollVertical {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-66%); } /* Trượt dần lên trên */
+        }
+
+        /* Khối hoạt động ngoại khóa giữ nguyên */
+        .activity-list { list-style: none; }
+        .activity-list li { padding: 14px 0; border-bottom: 1px dashed #e1e8ed; display: flex; align-items: flex-start; font-size: 15px; }
+        .activity-list li:last-child { border-bottom: none; }
+        
+        .badge { background: #e8f4fd; color: #3498db; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 12px; shrink: 0; white-space: nowrap; width: 130px; text-align: center; }
 
         /* Khối không gian 3D CSS */
         .placeholder-3d { text-align: center; padding: 40px 20px; background: #eaedf1; border-radius: 6px; border: 1px solid #e1e8ed; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 250px; }
@@ -129,11 +167,12 @@
         @media (max-width: 768px) {
             .nav-container { flex-direction: column; gap: 15px; padding: 15px 10px; }
             .nav-menu { gap: 12px; flex-wrap: wrap; justify-content: center; }
-            .slider-item { min-width: calc(50% - 8px); height: 130px; } /* Mobile hiển thị 2 ảnh */
+            .slider-item { min-width: calc(50% - 8px); height: 130px; }
             .grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 26px; }
             .hero { padding: 60px 0; }
             .project-list li { flex-direction: column; gap: 6px; }
+            .badge { width: 100%; text-align: left; }
             .contact-form { padding: 20px; }
             .btn-danger { width: 100%; }
         }
@@ -184,7 +223,7 @@
                     </div>
                 </div>
 
-                <!-- 2 CARD CHI TIẾT SẢN PHẨM (ĐÃ BỎ MÃ <IMG CŨ) -->
+                <!-- 2 CARD CHI TIẾT SẢN PHẨM -->
                 <div class="grid">
                     <!-- Sản phẩm 1 -->
                     <div class="card">
@@ -239,20 +278,29 @@
             <div class="container">
                 <h2 class="section-title">Các Dự Án Đã Thực Hiện</h2>
                 <div class="box-full">
-                    <ul class="project-list">
-                        <li>
-                            <span class="badge">Dự án VSK-18.68</span> 
-                            <span>Thiết kế hệ thống điện động lực và tủ chuyển đổi nguồn tự động cho sê-ri tàu vỏ thép.</span>
-                        </li>
-                        <li>
-                            <span class="badge">Dự án NM-46.25</span> 
-                            <span>Triển khai bản vẽ chi tiết và bóc tách khối lượng vật tư sản xuất Trạm phân phối chính.</span>
-                        </li>
-                        <li>
-                            <span class="badge">Dự án CTT24-45</span> 
-                            <span>Hoàn thiện tủ điều khiển tích hợp hệ thống cảnh báo sự cố kỹ thuật tập trung.</span>
-                        </li>
-                    </ul>
+                    <!-- KHU VỰC MARQUEE CUỘN DỌC TỰ ĐỘNG -->
+                    <div class="project-marquee-container" id="projectMarquee">
+                        <ul class="project-list" id="projectList">
+                            <li><span class="badge">Tàu CTT24-45</span><span>Hoàn thiện thiết kế hệ thống tủ điều khiển tích hợp cảnh báo sự cố kỹ thuật tập trung hàng hải.</span></li>
+                            <li><span class="badge">Tàu NM-46.25</span><span>Triển khai chi tiết bản vẽ thi công và bóc tách vật tư sản xuất hệ thống trạm phân phối chính.</span></li>
+                            <li><span class="badge">Tàu VSK-18.68</span><span>Thiết kế sơ đồ nguyên lý động lực và bàn giao tủ chuyển đổi nguồn tự động cho sê-ri tàu vỏ thép.</span></li>
+                            <li><span class="badge">Tàu VSK-19.66</span><span>Bố trí không gian và tối ưu trọng lượng tủ bảng điện chính cho dòng tàu khách vỏ hợp kim nhôm.</span></li>
+                            <li><span class="badge">Tàu NM128</span><span>Thiết kế kết cấu và chế tạo hệ thống tủ điện chính (Main Switchboard) tích hợp PMS cho tàu hàng tải trọng lớn.</span></li>
+                            <li><span class="badge">Tàu ES.K 140</span><span>Thiết kế bản vẽ chế tạo tủ phân phối nguồn động lực chính cho hệ thống thiết bị boong công trình.</span></li>
+                            <li><span class="badge">Tàu ESK132.02</span><span>Bóc tách khối lượng linh kiện và sản xuất cụm tủ chuyển nguồn tự động chịu dòng ngắn mạch cao.</span></li>
+                            <li><span class="badge">Tàu esk-136</span><span>Thiết kế kỹ thuật hệ thống tủ điện phân phối vùng (DB) đạt tiêu chuẩn cấp bảo vệ kín nước buồng máy.</span></li>
+                            <li><span class="badge">Tàu ESK-147</span><span>Tính toán phụ tải, lên sơ đồ nguyên lý tủ điện phân phối chiếu sáng và thông gió hành lang tàu.</span></li>
+                            <li><span class="badge">Tàu ESK-175</span><span>Tích hợp và cấu hình hệ thống quản lý năng lượng máy phát tự động, đảm bảo an toàn lưới điện.</span></li>
+                            <li><span class="badge">Tàu K-91</span><span>Thiết kế hệ thống tủ điện nạp ắc quy tự động khẩn cấp phục vụ cho các thiết bị vô tuyến điện đài tàu.</span></li>
+                            <li><span class="badge">Tàu K1814.SĐ3</span><span>Xử lý hồ sơ hoàn công, chuẩn hóa sơ đồ phân phối điện 3 pha cho các trạm nguồn dự phòng cạnh buồng lái.</span></li>
+                            <li><span class="badge">Tàu ROYAL</span><span>Thiết kế mạng lưới điện chiếu sáng mỹ thuật, hệ thống báo động chung (General Alarm) cho du thuyền.</span></li>
+                            <li><span class="badge">Tàu RP45-19</span><span>Triển khai bản vẽ tủ điều khiển khởi động sao-tam giác cho cụm bơm cứu hỏa và bơm la-tông buồng máy.</span></li>
+                            <li><span class="badge">Tàu SD24-04</span><span>Thiết kế vỏ tủ điện sơn tĩnh điện đạt tiêu chuẩn chống ăn mòn muối biển sê-ri tàu tuần tra hở boong.</span></li>
+                            <li><span class="badge">Tàu VS.K-24.45</span><span>Tích hợp đồng bộ mạch lực điều khiển hệ thống máy lái thủy lực, đáp ứng quy trình thử nghiệm Đăng kiểm VR.</span></li>
+                            <li><span class="badge">Tàu S110.KN-01</span><span>Bóc tách bản vẽ kỹ thuật CAD và bố trí tủ bảng điện phân phối khu vực sinh hoạt, buồng thủy thủ.</span></li>
+                            <li><span class="badge">Tàu S300-01</span><span>Thiết kế, chế tạo trọn gói tủ biến tần điều khiển tốc độ motor bơm ly tâm làm mát máy chính.</span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -323,46 +371,36 @@
         function moveSlider() {
             const items = document.querySelectorAll('.slider-item');
             const totalItems = items.length;
-            
-            // Tính số lượng ảnh hiển thị đồng thời tùy theo độ rộng màn hình
             const itemsPerScreen = window.innerWidth <= 768 ? 2 : 4;
             const maxIndex = totalItems - itemsPerScreen;
 
             index++;
-            if (index > maxIndex) {
-                index = 0; // Quay trở lại ảnh đầu tiên nếu chạy hết hàng
-            }
+            if (index > maxIndex) { index = 0; }
 
-            // Tính toán khoảng cách dịch chuyển bao gồm cả độ rộng thẻ và thuộc tính Gap (khoảng cách giữa các ảnh)
             const itemWidth = items[0].getBoundingClientRect().width;
             const gap = window.innerWidth <= 768 ? 16 : 15;
             const amountToMove = index * (itemWidth + gap);
 
             track.style.transform = `translateX(-${amountToMove}px)`;
         }
-
-        // Tự động kích hoạt dịch chuyển sau mỗi 3 giây (3000 mili giây)
         setInterval(moveSlider, 3000);
+        window.addEventListener('resize', () => { index = 0; track.style.transform = `translateX(0px)`; });
 
-        // Đảm bảo slider không bị lệch khi người dùng co giãn trình duyệt
-        window.addEventListener('resize', () => {
-            index = 0;
-            track.style.transform = `translateX(0px)`;
-        });
+        // --- NHÂN BẢN NỘI DUNG LIST DỰ ÁN ĐỂ CHẠY LIÊN TỤC KHÔNG BỊ KHỐNG TRỐNG ---
+        const list = document.getElementById('projectList');
+        list.innerHTML += list.innerHTML; 
 
-        // --- SCRIPT XỬ LÝ FORM ĐĂNG KÝ CŨ ---
+        // --- SCRIPT XỬ LÝ FORM ĐĂNG KÝ ---
         const form = document.getElementById("ajax-contact-form");
         const status = document.getElementById("form-status");
         const submitBtn = document.getElementById("submit-btn");
 
         form.addEventListener("submit", function(event) {
             event.preventDefault(); 
-            
             submitBtn.disabled = true;
             submitBtn.innerText = "⏳ Đang gửi yêu cầu...";
             status.className = ""; 
             status.style.display = "none";
-
             const data = new FormData(form);
             
             fetch(form.action, {
@@ -375,11 +413,7 @@
                     status.innerText = "🚀 Gửi thành công! Chúng tôi sẽ liên hệ lại ngay qua Số điện thoại/Zalo.";
                     status.className = "success";
                     form.reset(); 
-                    
-                    setTimeout(() => {
-                        status.className = "";
-                        status.style.display = "none";
-                    }, 4000);
+                    setTimeout(() => { status.className = ""; status.style.display = "none"; }, 4000);
                 } else {
                     status.innerText = "❌ Gửi yêu cầu thất bại. Vui lòng kiểm tra lại thông tin hoặc thử lại sau.";
                     status.className = "error";
