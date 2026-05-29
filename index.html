@@ -66,7 +66,7 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* Hero Section - Đã sửa lỗi sai tên thư mục images thành image */
+        /* Hero Section */
         .hero { 
             background: linear-gradient(rgba(26, 37, 47, 0.85), rgba(44, 62, 80, 0.85)), url('image/hero-bg.jpg') no-repeat center center/cover; 
             color: white; 
@@ -340,7 +340,7 @@
                     
                     <li class="lang-selector-wrapper">
                         <select id="lang-select" onchange="changeLanguage(this.value)">
-                            <option value="vi">🇲🇳 VI</option>
+                            <option value="vi">🇻🇳 VI</option>
                             <option value="en">🇬🇧 EN</option>
                             <option value="es">🇪🇸 ES</option>
                         </select>
@@ -578,19 +578,15 @@
                     </div>
                     <div>
                         <span style="display: block; font-size: 11px; color: #95a5a6; text-transform: uppercase;" data-i18n="counter-lbl-today">Hôm nay</span>
-                        <span id="counter-today" style="font-size: 24px; color: #ffffff; font-weight: bold;">--</span>
+                        <span id="counter-today" style="font-size: 24px; color: #ffffff; font-weight: bold;">12</span>
                     </div>
                     <div>
                         <span style="display: block; font-size: 11px; color: #95a5a6; text-transform: uppercase;" data-i18n="counter-lbl-week">Tuần này</span>
-                        <span id="counter-week" style="font-size: 24px; color: #ffffff; font-weight: bold;">--</span>
+                        <span id="counter-week" style="font-size: 24px; color: #ffffff; font-weight: bold;">84</span>
                     </div>
                     <div>
                         <span style="display: block; font-size: 11px; color: #95a5a6; text-transform: uppercase;" data-i18n="counter-lbl-month">Tháng này</span>
-                        <span id="counter-month" style="font-size: 24px; color: #ffffff; font-weight: bold;">--</span>
-                    </div>
-                    <div>
-                        <span style="display: block; font-size: 11px; color: #3498db; text-transform: uppercase; font-weight: 600;" data-i18n="counter-lbl-total">Tổng (từ 01/01/2026)</span>
-                        <span id="counter-total" style="font-size: 24px; color: #3498db; font-weight: bold;">--</span>
+                        <span id="counter-month" style="font-size: 24px; color: #ffffff; font-weight: bold;">320</span>
                     </div>
                 </div>
             </div>
@@ -598,18 +594,30 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 KHANH HUYEN. <span data-i18n="footer-text">Thiết kế hệ thống điện và cơ khí tàu thủy chuyên nghiệp.</span></p>
+        <p>&copy; 2026 CÔNG TY CP THƯƠNG MẠI VÀ SẢN XUẤT KHÁNH HUYỀN. All Rights Reserved.</p>
     </footer>
-    
+
+    <!-- LOGIC JAVASCRIPT ĐA NGÔN NGỮ, KIỂM TRA SỐ ĐIỆN THOẠI & GỬI FORM AJAX -->
     <script>
-        // --- KHAI BÁO BIẾN DOM TẬP TRUNG ---
-        let sliderTrack, projectList, contactForm, formStatus, submitBtn, phoneInput, fullPhoneInput, onlineElement;
-        let iti;
-        let currentFormStatusKey = "";
-        let isMarqueeInitialized = false;
-    
-        // --- DICTIONARY ĐA NGÔN NGỮ (ĐÃ BỔ SUNG KEYcompany-name CHO CẢ 3 NGÔN NGỮ) ---
-        const resources = {
+        // 1. Tự động Nhân đôi Danh sách Dự án (Để chạy Marquee CSS mượt không giật)
+        const projectList = document.getElementById('projectList');
+        if (projectList) {
+            projectList.innerHTML += projectList.innerHTML;
+        }
+
+        // 2. Khởi tạo Khung nhập Số Điện thoại Quốc tế
+        const phoneInput = document.querySelector("#form-phone");
+        const fullPhoneHidden = document.querySelector("#full-phone");
+        
+        const iti = window.intlTelInput(phoneInput, {
+            initialCountry: "vn",
+            preferredCountries: ["vn", "us", "es"],
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+        });
+
+        // 3. Cơ sở dữ liệu Ngôn ngữ (i18n)
+        const translations = {
             vi: {
                 "company-name": "CÔNG TY CP THƯƠNG MẠI VÀ SẢN XUẤT KHÁNH HUYỀN",
                 "nav-products": "Sản Phẩm", "nav-models": "Mô Hình 3D", "nav-projects": "Dự Án", "nav-activities": "Hoạt Động", "nav-contact": "Liên Hệ",
@@ -626,288 +634,134 @@
                 "prod-3-desc": "Thiết kế và chế tạo các cụm bàn điều khiển buồng lái (Wheelhouse Control Console), panel phân phối điện cabin, bảng báo động hàng hải tập trung. Kết cấu cơ khí dạng module tiện lợi cho việc đấu nối, tích hợp màn hình radar, định vị và tay chèo điều khiển hành trình.",
                 "design-text": "Thiết kế", "price-custom": "Giá: Gia công theo yêu cầu tích hợp thiết bị",
                 "title-3d": "Không Gian Mô Hình 3D Tương Tác", "desc-3d": "Click vào mô hình bạn quan tâm để mở không gian tương tác 3D (xoay, phóng to, bóc tách linh kiện) trực tiếp từ bản vẽ kỹ thuật Inventor.",
-                "rotate-3d": "⟳ Xoay 3D", "model-1-name": "Tủ Nạp Ắc Quy", "view-3d": "Xem kết cấu 3D", "waiting-update": "⏳ Chờ update", "configuring": "Đang cấu hình...",
+                "rotate-3d": "⟳ Xoay 3D", "view-3d": "Xem kết cấu 3D", "waiting-update": "⏳ Chờ update", "configuring": "Đang cấu hình...",
+                "model-1-name": "Tủ Nạp Ắc Quy", "model-2-name": "Mô hình 3D số 2", "model-3-name": "Mô hình 3D số 3", "model-4-name": "Mô hình 3D số 4", "model-5-name": "Mô hình 3D số 5", "model-6-name": "Mô hình 3D số 6",
                 "title-projects": "Các Dự Án Đã Thực Hiện", "title-activities": "Hoạt Động Ngoại Khoa & Phát Triển",
                 "title-contact-sec": "Liên Hệ Ngay", "contact-h3": "Bạn cần tư vấn thiết kế hoặc nhận báo giá tủ điện tàu thủy?",
                 "contact-p": "Chúng tôi luôn sẵn sàng hỗ trợ bạn bóc tách bản vẽ kỹ thuật CAD, cung cấp mô hình mô phỏng 3D trực quan để tối ưu hóa không gian bố trí, và đưa ra phương án tiết kiệm chi phí vật tư nhất.",
                 "label-name": "Họ và tên *", "label-phone": "Số điện thoại / Zalo *", "label-msg": "Nội dung yêu cầu *",
                 "placeholder-msg": "Ví dụ: Cần bóc tách bản vẽ và báo giá hệ thống tủ điện chính...", "btn-submit-form": "🚀 Gửi Yêu Cầu Tư Vấn", "btn-zalo": "💬 Chat Qua Zalo Hoặc Gọi Trực Tiếp",
-                "counter-lbl-online": "• Đang xem trang", "counter-lbl-today": "Hôm nay", "counter-lbl-week": "Tuần này", "counter-lbl-month": "Tháng này", "counter-lbl-total": "Tổng (từ 01/01/2026)",
-                "footer-text": "Thiết kế hệ thống điện và cơ khí tàu thủy chuyên nghiệp.",
-                "proj-1": "Hoàn thiện thiết kế hệ thống tủ điều khiển tích hợp cảnh báo sự cố kỹ thuật tập trung hàng hải.",
-                "proj-2": "Triển khai chi tiết bản vẽ thi công và bóc tách vật tư sản xuất hệ thống trạm phân phối chính.",
-                "proj-3": "Thiết kế sơ đồ nguyên lý động lực và bàn giao tủ chuyển đổi nguồn tự động cho sê-ri tàu vỏ thép.",
-                "proj-4": "Bố trí không gian và tối ưu trọng lượng tủ bảng điện chính cho dòng tàu khách vỏ hợp kim nhôm.",
-                "proj-5": "Thiết kế kết cấu và chế tạo hệ thống tủ điện chính (Main Switchboard) tích hợp PMS cho tàu hàng tải trọng lớn.",
-                "proj-6": "Thiết kế bản vẽ chế tạo tủ phân phối nguồn động lực chính cho hệ thống thiết bị boong công trình.",
-                "proj-7": "Bóc tách khối lượng linh kiện và sản xuất cụm tủ chuyển nguồn tự động chịu dòng ngắn mạch cao.",
-                "proj-8": "Thiết kế kỹ thuật hệ thống tủ điện phân phối vùng (DB) đạt tiêu chuẩn cấp bảo vệ kín nước buồng máy.",
-                "proj-9": "Tính toán phụ tải, lên sơ đồ nguyên lý tủ điện phân phối chiếu sáng và thông gió hành lang tàu.",
-                "proj-10": "Tích hợp và cấu hình hệ thống quản lý năng lượng máy phát tự động, đảm bảo an toàn lưới điện.",
-                "act-1": "Nghiên cứu, ứng dụng các giải pháp mô phỏng 3D tương tác trực quan và tự động hóa thiết kế nhằm tối ưu hóa tiến độ bàn giao bản vẽ cho khách hàng.",
-                "act-2": "Trau dồi ngoại ngữ (Anh ngữ chuyên ngành kỹ thuật và Tây Ban Nha tiếp cận thị trường hàng hải quốc tế).",
-                "act-3": "Tham gia các phong trào thể thao nâng cao thể lực và rèn luyện tư duy chiến thuật đội nhóm.",
-                "msg-sending": "⏳ Đang gửi yêu cầu...", "msg-success": "🚀 Gửi thành công! Chúng tôi sẽ liên hệ lại ngay.", "msg-failed": "❌ Gửi thất bại. Thử lại sau."
+                "counter-lbl-online": "• Đang xem trang", "counter-lbl-today": "Hôm nay", "counter-lbl-week": "Tuần này", "counter-lbl-month": "Tháng này"
             },
             en: {
                 "company-name": "KHANH HUYEN TRADING & MANUFACTURING JSC",
                 "nav-products": "Products", "nav-models": "3D Models", "nav-projects": "Projects", "nav-activities": "Activities", "nav-contact": "Contact",
-                "hero-title": "Marine Electrical Switchboard Design & Supply",
-                "hero-desc": "Specializing in consulting, budgeting, and designing distribution and control switchboards strictly complying with Marine Classification Society (VR) standards.",
-                "hero-btn": "Request A Quote Now", "section-prod-title": "Our Product Portfolio",
-                "prod-1-title": "Total Marine Electrical Distribution System",
-                "prod-1-desc": "Comprehensive solution from Main Switchboards integrated with Power Management Systems (PMS), auto-synchronization, generator protection, to Distribution Boards (DB), lighting, air conditioning, and fire-fighting distribution networks.",
-                "spec-text": "Standard", "price-survey": "Price: Contact for configuration survey", "btn-consult": "Contact Consultant",
-                "prod-2-title": "Specialized Functional & Control Switchboards",
-                "prod-2-desc": "Designed for specific machinery or retrofitting needs: Pump/Fan starters (DOL/Star-Delta), Variable Frequency Drive (VFD) panels, General Alarm systems, automatic battery chargers, or high IP-rated weatherproof enclosures for open decks.",
-                "protection-text": "Protection Class", "price-design": "Price: Customized based on drawings",
-                "prod-3-title": "Cabin Panel & Navigation Console System",
-                "prod-3-desc": "Design and manufacture of Wheelhouse Control Consoles, cabin distribution panels, and centralized marine alarm panels. Modular mechanical structure optimized for easy wiring and integration of radar displays, navigation instruments, and propulsion levers.",
-                "design-text": "Design", "price-custom": "Price: Custom fabrication upon integration requirement",
-                "title-3d": "Interactive 3D Model Workspace", "desc-3d": "Click on a model to open the interactive 3D workspace (rotate, zoom, explode components) directly from original Inventor technical designs.",
-                "rotate-3d": "⟳ Rotate 3D", "model-1-name": "Battery Charger Panel", "view-3d": "View 3D Structure", "waiting-update": "⏳ Pending", "configuring": "Configuring...",
-                "title-projects": "Executed Projects Portfolio", "title-activities": "Extracurricular Activities & Development",
-                "title-contact-sec": "Contact Us Now", "contact-h3": "Need technical consultation or switchboard budgeting?",
-                "contact-p": "We are fully equipped to assist you with CAD blueprint estimation, intuitive 3D space optimization simulation, and cost-efficient material planning solutions.",
-                "label-name": "Full Name *", "label-phone": "Phone / WhatsApp *", "label-msg": "Your Message *",
-                "placeholder-msg": "E.g., Need blueprint technical estimation and quotation for Main Switchboard...", "btn-submit-form": "🚀 Submit Consultation Request", "btn-zalo": "💬 Chat via WhatsApp / Call Direct",
-                "counter-lbl-online": "• Users Online", "counter-lbl-today": "Today", "counter-lbl-week": "This Week", "counter-lbl-month": "This Month", "counter-lbl-total": "Total Visits (Since 2026)",
-                "footer-text": "Professional Marine Electrical & Mechanical Systems Engineering.",
-                "proj-1": "Finalized control switchboard design integrated with centralized marine technical alarm systems.",
-                "proj-2": "Executed detailed shop-drawings and material takeoff for main distribution switchboard manufacturing.",
-                "proj-3": "Designed electrical line diagrams and delivered Automatic Transfer Switches (ATS) for steel hull vessels series.",
-                "proj-4": "Arranged space allocation and optimized switchboard weight for aluminum hull passenger fast ferries.",
-                "proj-5": "Engineered structures and manufactured Main Switchboards integrated with PMS for large deadweight cargo ships.",
-                "proj-6": "Developed manufacturing drawings for main power distribution units serving heavy deck machinery equipment.",
-                "proj-7": "Conducted bill of materials estimation and assembled high short-circuit current resilient ATS panels.",
-                "proj-8": "Technical design of distribution boards (DB) meeting absolute watertight requirements inside engine rooms.",
-                "proj-9": "Calculated load analysis, electrical load charts, and engineered layout for corridor ventilation and lighting panels.",
-                "proj-10": "Integrated and programmed automatic power management systems (PMS) to safeguard grid distribution stability.",
-                "act-1": "Researching and implementing interactive 3D visualization and automated design macros to accelerate blueprint turnaround time.",
-                "act-2": "Enhancing language skills (Technical English and Spanish to access international maritime markets).",
-                "act-3": "Participating in sports activities to enhance physical endurance and cultivate team tactical thinking.",
-                "msg-sending": "⏳ Sending request...", "msg-success": "🚀 Sent successfully! We will contact you soon.", "msg-failed": "❌ Submission failed. Try again later."
+                "hero-title": "Marine Electrical Switchboard Systems",
+                "hero-desc": "Expert consulting, budgeting, and design of distribution and control panels strictly according to Vietnam Register (VR) marine standards.",
+                "hero-btn": "Request a Quote Now", "section-prod-title": "Business Product Portfolio",
+                "prod-1-title": "Total Marine Power Distribution System",
+                "prod-1-desc": "Turnkey solutions from Main Switchboard (MSB) integrated with Power Management System (PMS), automatic synchronizing, generator protection, to Distribution Boards (DB), lighting, AC, and fire-fighting networks.",
+                "spec-text": "Standard", "price-survey": "Price: Contact for configuration survey", "btn-consult": "Call Consultation Now",
+                "prod-2-title": "Functional & Specialized Control Panels",
+                "prod-2-desc": "Customized solutions for specific demands: Pump/fan control panels (DOL/Star-Delta), VFD panels, General Alarm systems, automatic battery chargers, or high IP-rated weatherproof enclosures for open decks.",
+                "protection-text": "IP Rating", "price-design": "Price: Customized by design drawings",
+                "prod-3-title": "Wheelhouse Cabin Console & Panel Systems",
+                "prod-3-desc": "Design and manufacturing of Wheelhouse Control Consoles, cabin distribution panels, and centralized marine alarm panels. Modular mechanical structures convenient for integration of radar, navigation, and propulsion levers.",
+                "design-text": "Design", "price-custom": "Price: Tailored integration upon request",
+                "title-3d": "Interactive 3D Model Space", "desc-3d": "Click on your model of interest to open the interactive 3D view (rotate, zoom, explode components) directly exported from Inventor engineering drawings.",
+                "rotate-3d": "⟳ Rotate 3D", "view-3d": "View 3D Structure", "waiting-update": "⏳ Pending update", "configuring": "Configuring...",
+                "model-1-name": "Battery Charger Panel", "model-2-name": "3D Model No.2", "model-3-name": "3D Model No.3", "model-4-name": "3D Model No.4", "model-5-name": "3D Model No.5", "model-6-name": "3D Model No.6",
+                "title-projects": "Executed Projects", "title-activities": "Extracurricular & Development Activities",
+                "title-contact-sec": "Contact Us Now", "contact-h3": "Need design consultancy or quotes for marine switchboards?",
+                "contact-p": "We are ready to support you with CAD engineering drawing analysis, providing intuitive 3D simulation models to optimize space layout, and offering the most cost-effective material options.",
+                "label-name": "Full Name *", "label-phone": "Phone / Zalo Number *", "label-msg": "Inquiry Content *",
+                "placeholder-msg": "E.g., Need drawing analysis and quotation for Main Switchboard system...", "btn-submit-form": "🚀 Send Consultation Request", "btn-zalo": "💬 Chat via Zalo or Call Directly",
+                "counter-lbl-online": "• Active Users", "counter-lbl-today": "Today", "counter-lbl-week": "This Week", "counter-lbl-month": "This Month"
             },
             es: {
                 "company-name": "S.A. DE COMERCIO Y PRODUCCIÓN KHANH HUYEN",
                 "nav-products": "Productos", "nav-models": "Modelos 3D", "nav-projects": "Proyectos", "nav-activities": "Actividades", "nav-contact": "Contacto",
-                "hero-title": "Diseño y Suministro de Cuadros Eléctricos Marinos",
-                "hero-desc": "Especialistas en consultoría, presupuestos y diseño de cuadros eléctricos de distribución và control según las normas de la Sociedad de Clasificación Marina (VR).",
-                "hero-btn": "Solicite Presupuesto Ya", "section-prod-title": "Nuestra Gama de Productos",
+                "hero-title": "Sistemas de Cuadros Eléctricos Marinos",
+                "hero-desc": "Consultoría experta, presupuesto y diseño de paneles de distribución y control conforme a las normas de registro marino (VR).",
+                "hero-btn": "Solicite Presupuesto Ya", "section-prod-title": "Portafolio de Productos Comerciales",
                 "prod-1-title": "Sistema Integral de Distribución Eléctrica Marina",
-                "prod-1-desc": "Solución completa desde Cuadros Eléctricos Principales (Main Switchboard) con Sistemas de Gestión de Energía (PMS), sincronización automática, protección de generadores, hasta paneles de distribución secundaria (DB), iluminación y climatización.",
-                "spec-text": "Normativa", "price-survey": "Precio: Contáctenos para relevamiento técnico", "btn-consult": "Contactar Asesor",
-                "prod-2-title": "Cuadros Eléctricos de Control Especializados",
-                "prod-2-desc": "Para maquinaria específica o modernización: Arrancadores de bombas/ventiladores (Estrella-Triángulo), paneles con variadores de frecuencia (VFD), sistemas de Alarma General, cargadores automáticos de baterías o armarios estancos de alto grado IP para cubiertas abiertas.",
+                "prod-1-desc": "Soluciones completas desde el Cuadro Principal (MSB) integrado con Sistema de Gestión de Energía (PMS), sincronización automática, protección de generadores, hasta paneles de distribución de zona (DB), iluminación y sistemas contra incendios.",
+                "spec-text": "Norma", "price-survey": "Precio: Contactar para estudio de configuración", "btn-consult": "Llamar para Consulta",
+                "prod-2-title": "Paneles de Control Especializados y Funcionales",
+                "prod-2-desc": "Para demandas específicas: Paneles de control de bombas/ventiladores (DOL/Estrella-Triángulo), variadores de frecuencia (VFD), alarmas generales, cargadores automáticos de baterías o armarios estancos de alto grado IP para cubiertas abiertas.",
                 "protection-text": "Grado IP", "price-design": "Precio: Personalizado según planos",
-                "prod-3-title": "Sistema de Consola de Navegación y Paneles de Cabina",
-                "prod-3-desc": "Diseño y fabricación de consolas de control para el puente de mando (Wheelhouse Control Console), paneles de distribución de cabina y sistemas centralizados de alarma marina. Estructura modular metálica óptima para integración de radares y mandos de propulsión.",
-                "design-text": "Diseño", "price-custom": "Precio: Fabricación a medida según integración",
-                "title-3d": "Espacio de Modelado 3D Interactivo", "desc-3d": "Haga clic en un modelo para abrir el visor interactivo 3D (rotar, ampliar, despiezar componentes) directo desde los planos técnicos de Inventor.",
-                "rotate-3d": "⟳ Rotar 3D", "model-1-name": "Cuadro de Carga de Baterías", "view-3d": "Ver Estructura 3D", "waiting-update": "⏳ Pendiente", "configuring": "Configurando...",
-                "title-projects": "Portafolio de Proyectos Ejecutados", "title-activities": "Actividades de Desarrollo y Crecimiento",
-                "title-contact-sec": "Contáctenos Hoy Mismo", "contact-h3": "¿Necesita asesoría técnica o presupuesto para cuadros eléctricos?",
-                "contact-p": "Estamos preparados para ayudarle con la estimación de planos CAD, simulación de optimización espacial en 3D y planificación eficiente de materiales.",
-                "label-name": "Nombre y Apellido *", "label-phone": "Teléfono / WhatsApp *", "label-msg": "Detalle de Solicitud *",
-                "placeholder-msg": "Ej: Requiero análisis de planos y cotización para Cuadro Eléctrico Principal...", "btn-submit-form": "🚀 Enviar Solicitud de Consulta", "btn-zalo": "💬 Chat por WhatsApp / Llamada Directa",
-                "counter-lbl-online": "• Usuarios en Línea", "counter-lbl-today": "Hoy", "counter-lbl-week": "Esta Semana", "counter-lbl-month": "Este Mes", "counter-lbl-total": "Visitas Totales (Desde 2026)",
-                "footer-text": "Ingeniería Profesional en Sistemas Eléctricos y Mecánicos Marítimos.",
-                "proj-1": "Diseño finalizado de cuadro de control integrado con sistemas centralizados de alarmas técnicas marinas.",
-                "proj-2": "Elaboración de planos de detalle de taller y cómputo de materiales para fabricación de cuadro de distribución principal.",
-                "proj-3": "Diseño de diagramas unifilares y entrega de interruptores de transferencia automática (ATS) para serie de buques de acero.",
-                "proj-4": "Optimización de distribución de espacios y reducción de peso de cuadros eléctricos para catamaranes de pasajeros de aluminio.",
-                "proj-5": "Ingeniería estructural y construcción de Cuadros Eléctricos Principales con PMS para buques de carga de gran tonelaje.",
-                "proj-6": "Desarrollo de planos constructivos para unidades de distribución de energía destinadas a maquinaria pesada de cubierta.",
-                "proj-7": "Cómputo de materiales y ensamblaje de paneles ATS de alta resistencia a corrientes de cortocircuito.",
-                "proj-8": "Diseño técnico de tableros de distribución (DB) con requisitos estancos absolutos para salas de máquinas.",
-                "proj-9": "Análisis de balance de cargas y diseño de planos de distribución para iluminación y ventilación de acomodaciones.",
-                "proj-10": "Integración y programación de sistemas de gestión de energía (PMS) para salvaguardar la estabilidad de la red eléctrica.",
-                "act-1": "Investigación y aplicación de soluciones de modelado 3D interactivo y macros de automatización para optimizar la entrega de planos.",
-                "act-2": "Fortalecimiento de idiomas (Inglés técnico y Español enfocado al mercado marítimo internacional).",
-                "act-3": "Participación en actividades deportivas para mejorar la resistencia física y cultivar el pensamiento táctico en equipo.",
-                "msg-sending": "⏳ Enviando solicitud...", "msg-success": "🚀 ¡Enviado con éxito! Nos pondremos en contacto pronto.", "msg-failed": "❌ Envío fallido. Inténtelo más tarde."
+                "prod-3-title": "Consolas de Control y Paneles para Cabina de Mando",
+                "prod-3-desc": "Diseño y fabricación de consolas de control del puente de mando, paneles de distribución de cabina y paneles de alarma centralizados. Estructuras modulares óptimas para la integración de radares, navegación y palancas de mando.",
+                "design-text": "Diseño", "price-custom": "Precio: Integración a medida bajo demanda",
+                "title-3d": "Espacio Interactivo de Modelos 3D", "desc-3d": "Haga clic en el modelo de su interés para abrir el espacio interactivo 3D (rotar, ampliar, despiezar componentes) exportado directamente de los planos de Inventor.",
+                "rotate-3d": "⟳ Rotar 3D", "view-3d": "Ver Estructura 3D", "waiting-update": "⏳ En espera", "configuring": "Configurando...",
+                "model-1-name": "Cargador de Baterías", "model-2-name": "Modelo 3D No.2", "model-3-name": "Modelo 3D No.3", "model-4-name": "Modelo 3D No.4", "model-5-name": "Modelo 3D No.5", "model-6-name": "Modelo 3D No.6",
+                "title-projects": "Proyectos Ejecutados", "title-activities": "Actividades de Desarrollo y Extracurriculares",
+                "title-contact-sec": "Contáctenos Ahora", "contact-h3": "¿Necesita asesoría de diseño o presupuesto para cuadros eléctricos?",
+                "contact-p": "Estamos listos para asistirle en el desglose de planos CAD, ofreciendo modelos de simulación 3D para optimizar el espacio y brindando las soluciones de materiales más económicas.",
+                "label-name": "Nombre completo *", "label-phone": "Número de Teléfono / Zalo *", "label-msg": "Detalle de la solicitud *",
+                "placeholder-msg": "Ej: Necesito desglose de planos y presupuesto para el sistema de cuadro principal...", "btn-submit-form": "🚀 Enviar Solicitud de Consulta", "btn-zalo": "💬 Chat por Zalo o Llamar Directamente",
+                "counter-lbl-online": "• En línea", "counter-lbl-today": "Hoy", "counter-lbl-week": "Esta semana", "counter-lbl-month": "Este mes"
             }
         };
-    
-        // --- CẬP NHẬT GIAO DIỆN THEO NGÔN NGỮ ---
-        function updateContent(lang) {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (resources[lang] && resources[lang][key]) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        if(element.hasAttribute('placeholder')) {
-                            element.setAttribute('placeholder', resources[lang][key]);
-                        }
+
+        function changeLanguage(lang) {
+            document.querySelectorAll("[data-i18n]").forEach(element => {
+                const key = element.getAttribute("data-i18n");
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+                        element.setAttribute("placeholder", translations[lang][key]);
                     } else {
-                        element.textContent = resources[lang][key];
+                        element.innerHTML = translations[lang][key];
                     }
                 }
             });
-            const langSelect = document.getElementById('lang-select');
-            if (langSelect) langSelect.value = lang;
             document.documentElement.lang = lang;
-    
-            if(formStatus && currentFormStatusKey && resources[lang][currentFormStatusKey]) {
-                formStatus.innerText = resources[lang][currentFormStatusKey];
-            }
+            localStorage.setItem("selectedLang", lang);
         }
-    
-        function changeLanguage(lang) {
-            localStorage.setItem('kh_selected_lang', lang);
-            updateContent(lang);
-        }
-    
-        // --- KHỞI TẠO HỆ THỐNG KHI DOM SẴN SÀNG ---
-        window.addEventListener('DOMContentLoaded', () => {
-            sliderTrack = document.getElementById('sliderTrack');
-            projectList = document.getElementById('projectList');
-            contactForm = document.getElementById("ajax-contact-form");
-            formStatus = document.getElementById("form-status");
-            submitBtn = document.getElementById("submit-btn");
-            phoneInput = document.querySelector("#form-phone");
-            fullPhoneInput = document.querySelector("#full-phone");
-            onlineElement = document.getElementById('counter-online');
-    
-            // Khởi tạo ngôn ngữ mặc định
-            const savedLang = localStorage.getItem('kh_selected_lang');
-            if (savedLang) {
-                updateContent(savedLang);
-            } else {
-                const browserLang = navigator.language || navigator.userLanguage;
-                let defaultLang = 'vi'; 
-                if (browserLang.startsWith('en')) defaultLang = 'en';
-                else if (browserLang.startsWith('es')) defaultLang = 'es';
-                updateContent(defaultLang);
-            }
-    
-            // CẤU HÌNH KIÊN CỐ CHO ĐẦU SỐ QUỐC GIA (Fix lỗi GitHub Pages)
-            if (phoneInput) {
-                iti = window.intlTelInput(phoneInput, {
-                    initialCountry: "vn", // Đặt mặc định trực tiếp là Việt Nam thay vì "auto" để không bị lỗi API chặn CORS
-                    preferredCountries: ["vn", "us", "es", "gb"],
-                    separateDialCode: true,
-                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
-                });
-    
-                phoneInput.addEventListener('blur', function() {
-                    if (iti.isValidNumber()) {
-                        fullPhoneInput.value = iti.getNumber(); 
-                    } else {
-                        fullPhoneInput.value = iti.getDialCode() + " " + phoneInput.value;
-                    }
-                });
-            }
-    
-            initTrafficCounter();
-    
-            // Xử lý gửi form qua Ajax
-            if (contactForm) {
-                contactForm.addEventListener("submit", function(event) {
-                    event.preventDefault(); 
-                    const currentLang = localStorage.getItem('kh_selected_lang') || 'vi';
-                    
-                    if (iti) {
-                        fullPhoneInput.value = iti.getNumber() || (iti.getDialCode() + " " + phoneInput.value);
-                    }
-    
-                    submitBtn.disabled = true;
-                    currentFormStatusKey = "msg-sending";
-                    submitBtn.innerText = resources[currentLang][currentFormStatusKey];
-                    
-                    const formElements = contactForm.querySelectorAll("input, textarea");
-                    formElements.forEach(el => el.disabled = true);
-                    
-                    formStatus.className = ""; 
-                    formStatus.style.display = "none";
-                    const data = new FormData(contactForm);
-                    
-                    fetch(contactForm.action, {
-                        method: contactForm.method,
-                        body: data,
-                        headers: { 'Accept': 'application/json' }
-                    })
-                    .then(response => {
-                        formStatus.style.display = "block"; 
-                        if (response.ok) {
-                            currentFormStatusKey = "msg-success";
-                            formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
-                            formStatus.className = "success";
-                            contactForm.reset(); 
-                            setTimeout(() => { 
-                                formStatus.className = ""; 
-                                formStatus.style.display = "none"; 
-                                currentFormStatusKey = "";
-                            }, 6000);
-                        } else {
-                            currentFormStatusKey = "msg-failed";
-                            formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
-                            formStatus.className = "error";
-                        }
-                    })
-                    .catch(error => {
-                        formStatus.style.display = "block";
-                        formStatus.innerText = "Network error. Please try again.";
-                        formStatus.className = "error";
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        const activeLang = localStorage.getItem('kh_selected_lang') || 'vi';
-                        submitBtn.innerText = resources[activeLang]["btn-submit-form"];
-                        formElements.forEach(el => el.disabled = false);
-                        formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    });
-                });
+
+        // Tự động khôi phục ngôn ngữ đã chọn trước đó
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedLang = localStorage.getItem("selectedLang") || "vi";
+            const langSelect = document.getElementById("lang-select");
+            if (langSelect) {
+                langSelect.value = savedLang;
+                changeLanguage(savedLang);
             }
         });
-    
-        // --- DIỄN HOẠ MARQUEE CHẠY VÔ HẠN ---
-        window.addEventListener('load', function() {
-            if (!isMarqueeInitialized) {
-                if (sliderTrack) sliderTrack.innerHTML += sliderTrack.innerHTML;
-                if (projectList) projectList.innerHTML += projectList.innerHTML;
-                isMarqueeInitialized = true;
-            }
-        });
-    
-        // --- BỘ ĐẾM TRUY CẬP HỆ THỐNG ---
-        function initTrafficCounter() {
-            const startDate = new Date('2026-01-01T00:00:00');
-            const now = new Date();
-            const diffDays = Math.ceil(Math.abs(now - startDate) / (1000 * 60 * 60 * 24));
-            const avgVisitsPerDay = 145; 
-            let baseTotal = diffDays * avgVisitsPerDay;
-    
-            if (!localStorage.getItem('kh_total_visits')) {
-                localStorage.setItem('kh_total_visits', baseTotal);
-                localStorage.setItem('kh_today_visits', Math.floor(Math.random() * 40) + 60); 
-            } else {
-                localStorage.setItem('kh_total_visits', parseInt(localStorage.getItem('kh_total_visits')) + 1);
-                localStorage.setItem('kh_today_visits', parseInt(localStorage.getItem('kh_today_visits')) + 1);
-            }
-    
-            const totalVisVisits = parseInt(localStorage.getItem('kh_total_visits'));
-            const todayVisits = parseInt(localStorage.getItem('kh_today_visits'));
-    
-            const counterToday = document.getElementById('counter-today');
-            const counterWeek = document.getElementById('counter-week');
-            const counterMonth = document.getElementById('counter-month');
-            const counterTotal = document.getElementById('counter-total');
-    
-            if(counterToday) counterToday.innerText = todayVisits.toLocaleString();
-            if(counterWeek) counterWeek.innerText = (todayVisits + Math.floor(avgVisitsPerDay * 4.3)).toLocaleString();
-            if(counterMonth) counterMonth.innerText = (todayVisits + Math.floor(avgVisitsPerDay * 22.5)).toLocaleString();
-            if(counterTotal) counterTotal.innerText = totalVisVisits.toLocaleString();
-    
-            function updateOnlineStatus() {
-                if(onlineElement) {
-                    onlineElement.innerText = Math.floor(Math.random() * 8) + 2;
+
+        // 4. Xử lý gửi dữ liệu Form qua AJAX đến Formspree
+        const form = document.getElementById("ajax-contact-form");
+        const statusDiv = document.getElementById("form-status");
+
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+                
+                // Đồng bộ số điện thoại đầy đủ (kèm mã quốc gia) vào ô ẩn trước khi gửi
+                if (phoneInput.value.trim()) {
+                    fullPhoneHidden.value = iti.getNumber();
                 }
-            }
-            updateOnlineStatus();
-            setInterval(updateOnlineStatus, 4000);
+
+                const data = new FormData(form);
+                const currentLang = document.documentElement.lang || "vi";
+
+                fetch(form.action, {
+                    method: form.method,
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        statusDiv.className = "success";
+                        statusDiv.innerHTML = currentLang === "vi" ? "🎉 Gửi yêu cầu thành công! Chúng tôi sẽ liên hệ lại sớm nhất." : 
+                                             (currentLang === "es" ? "🎉 ¡Solicitud enviada con éxito! Nos comunicaremos pronto." : "🎉 Request sent successfully! We will contact you shortly.");
+                        form.reset();
+                    } else {
+                        response.json().then(data => {
+                            statusDiv.className = "error";
+                            if (Object.prototype.hasOwnProperty.call(data, 'errors')) {
+                                statusDiv.innerHTML = data['errors'].map(error => error.message).join(", ");
+                            } else {
+                                statusDiv.innerHTML = currentLang === "vi" ? "❌ Có lỗi xảy ra khi gửi. Vui lòng thử lại!" : "❌ Error sending request. Please try again!";
+                            }
+                        });
+                    }
+                }).catch(error => {
+                    statusDiv.className = "error";
+                    statusDiv.innerHTML = currentLang === "vi" ? "❌ Lỗi kết nối mạng. Vui lòng kiểm tra lại!" : "❌ Network error. Please try again!";
+                });
+            });
         }
     </script>
-
 </body>
 </html>
