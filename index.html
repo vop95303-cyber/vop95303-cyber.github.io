@@ -600,28 +600,14 @@
     <footer>
         <p>&copy; 2026 KHANH HUYEN. <span data-i18n="footer-text">Thiết kế hệ thống điện và cơ khí tàu thủy chuyên nghiệp.</span></p>
     </footer>
-
+    
     <script>
-        // --- KHAI BÁO BIẾN DOM TẬP TRUNG ---
-        const sliderTrack = document.getElementById('sliderTrack');
-        const projectList = document.getElementById('projectList');
-        const contactForm = document.getElementById("ajax-contact-form");
-        const formStatus = document.getElementById("form-status");
-        const submitBtn = document.getElementById("submit-btn");
-        const phoneInput = document.querySelector("#form-phone");
-        const fullPhoneInput = document.querySelector("#full-phone");
-        const onlineElement = document.getElementById('counter-online');
-
-        // --- DIỄN HOẠ MARQUEE VÔ HẠN (CHẠY 1 LẦN DUY NHẤT KHI LOAD) ---
+        // --- KHAI BÁO BIẾN DOM TẬP TRUNG (Chỉ khai báo, không gán trực tiếp để tránh null) ---
+        let sliderTrack, projectList, contactForm, formStatus, submitBtn, phoneInput, fullPhoneInput, onlineElement;
+        let iti;
+        let currentFormStatusKey = "";
         let isMarqueeInitialized = false;
-        window.addEventListener('load', function() {
-            if (!isMarqueeInitialized) {
-                if (sliderTrack) sliderTrack.innerHTML += sliderTrack.innerHTML;
-                if (projectList) projectList.innerHTML += projectList.innerHTML;
-                isMarqueeInitialized = true;
-            }
-        });
-
+    
         // --- DICTIONARY ĐA NGÔN NGỮ ---
         const resources = {
             vi: {
@@ -739,9 +725,7 @@
                 "msg-sending": "⏳ Enviando solicitud...", "msg-success": "🚀 ¡Enviado con éxito! Nos pondremos en contacto pronto.", "msg-failed": "❌ Envío fallido. Inténtelo más tarde."
             }
         };
-
-        let currentFormStatusKey = "";
-
+    
         // --- CẬP NHẬT GIAO DIỆN THEO NGÔN NGỮ ---
         function updateContent(lang) {
             const elements = document.querySelectorAll('[data-i18n]');
@@ -757,22 +741,33 @@
                     }
                 }
             });
-            document.getElementById('lang-select').value = lang;
+            const langSelect = document.getElementById('lang-select');
+            if (langSelect) langSelect.value = lang;
             document.documentElement.lang = lang;
-
+    
             if(formStatus && currentFormStatusKey && resources[lang][currentFormStatusKey]) {
                 formStatus.innerText = resources[lang][currentFormStatusKey];
             }
         }
-
+    
         function changeLanguage(lang) {
             localStorage.setItem('kh_selected_lang', lang);
             updateContent(lang);
         }
-
-        // --- KHỞI TẠO ĐA NGÔN NGỮ & SỐ ĐIỆN THOẠI QUỐC TẾ ---
-        let iti;
-        function initInternationalization() {
+    
+        // --- GÁN BIẾN DOM VÀ KHỞI TẠO HỆ THỐNG KHI DOM SẴN SÀNG ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Gán phần tử DOM thực tế sau khi cây DOM đã dựng xong
+            sliderTrack = document.getElementById('sliderTrack');
+            projectList = document.getElementById('projectList');
+            contactForm = document.getElementById("ajax-contact-form");
+            formStatus = document.getElementById("form-status");
+            submitBtn = document.getElementById("submit-btn");
+            phoneInput = document.querySelector("#form-phone");
+            fullPhoneInput = document.querySelector("#full-phone");
+            onlineElement = document.getElementById('counter-online');
+    
+            // 1. Khởi tạo đa ngôn ngữ và Ô điện thoại quốc tế
             const savedLang = localStorage.getItem('kh_selected_lang');
             if (savedLang) {
                 updateContent(savedLang);
@@ -783,7 +778,7 @@
                 else if (browserLang.startsWith('es')) defaultLang = 'es';
                 updateContent(defaultLang);
             }
-
+    
             if (phoneInput) {
                 iti = window.intlTelInput(phoneInput, {
                     initialCountry: "auto",
@@ -797,7 +792,7 @@
                     separateDialCode: true,
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
                 });
-
+    
                 phoneInput.addEventListener('blur', function() {
                     if (iti.isValidNumber()) {
                         fullPhoneInput.value = iti.getNumber(); 
@@ -806,67 +801,79 @@
                     }
                 });
             }
-        }
-
-        // --- XỬ LÝ GỬI FORM AJAX ---
-        if (contactForm) {
-            contactForm.addEventListener("submit", function(event) {
-                event.preventDefault(); 
-                const currentLang = localStorage.getItem('kh_selected_lang') || 'vi';
-                
-                if (iti) {
-                    fullPhoneInput.value = iti.getNumber() || (iti.getDialCode() + " " + phoneInput.value);
-                }
-
-                submitBtn.disabled = true;
-                currentFormStatusKey = "msg-sending";
-                submitBtn.innerText = resources[currentLang][currentFormStatusKey];
-                
-                const formElements = contactForm.querySelectorAll("input, textarea");
-                formElements.forEach(el => el.disabled = true);
-                
-                formStatus.className = ""; 
-                formStatus.style.display = "none"; // Reset ẩn ban đầu
-                const data = new FormData(contactForm);
-                
-                fetch(contactForm.action, {
-                    method: contactForm.method,
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                })
-                .then(response => {
-                    formStatus.style.display = "block"; // ÉP BUỘC HIỂN THỊ LẠI MÀN HÌNH
-                    if (response.ok) {
-                        currentFormStatusKey = "msg-success";
-                        formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
-                        formStatus.className = "success";
-                        contactForm.reset(); 
-                        setTimeout(() => { 
-                            formStatus.className = ""; 
-                            formStatus.style.display = "none"; 
-                            currentFormStatusKey = "";
-                        }, 6000);
-                    } else {
-                        currentFormStatusKey = "msg-failed";
-                        formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
-                        formStatus.className = "error";
+    
+            // 2. Khởi tạo Bộ đếm lượt truy cập
+            initTrafficCounter();
+    
+            // 3. Khởi nghiệp cấu hình gửi Form
+            if (contactForm) {
+                contactForm.addEventListener("submit", function(event) {
+                    event.preventDefault(); 
+                    const currentLang = localStorage.getItem('kh_selected_lang') || 'vi';
+                    
+                    if (iti) {
+                        fullPhoneInput.value = iti.getNumber() || (iti.getDialCode() + " " + phoneInput.value);
                     }
-                })
-                .catch(error => {
-                    formStatus.style.display = "block";
-                    formStatus.innerText = "Network error. Please try again.";
-                    formStatus.className = "error";
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    const activeLang = localStorage.getItem('kh_selected_lang') || 'vi';
-                    submitBtn.innerText = resources[activeLang]["btn-submit-form"];
-                    formElements.forEach(el => el.disabled = false);
-                    formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+                    submitBtn.disabled = true;
+                    currentFormStatusKey = "msg-sending";
+                    submitBtn.innerText = resources[currentLang][currentFormStatusKey];
+                    
+                    const formElements = contactForm.querySelectorAll("input, textarea");
+                    formElements.forEach(el => el.disabled = true);
+                    
+                    formStatus.className = ""; 
+                    formStatus.style.display = "none";
+                    const data = new FormData(contactForm);
+                    
+                    fetch(contactForm.action, {
+                        method: contactForm.method,
+                        body: data,
+                        headers: { 'Accept': 'application/json' }
+                    })
+                    .then(response => {
+                        formStatus.style.display = "block"; 
+                        if (response.ok) {
+                            currentFormStatusKey = "msg-success";
+                            formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
+                            formStatus.className = "success";
+                            contactForm.reset(); 
+                            setTimeout(() => { 
+                                formStatus.className = ""; 
+                                formStatus.style.display = "none"; 
+                                currentFormStatusKey = "";
+                            }, 6000);
+                        } else {
+                            currentFormStatusKey = "msg-failed";
+                            formStatus.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
+                            formStatus.className = "error";
+                        }
+                    })
+                    .catch(error => {
+                        formStatus.style.display = "block";
+                        formStatus.innerText = "Network error. Please try again.";
+                        formStatus.className = "error";
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        const activeLang = localStorage.getItem('kh_selected_lang') || 'vi';
+                        submitBtn.innerText = resources[activeLang]["btn-submit-form"];
+                        formElements.forEach(el => el.disabled = false);
+                        formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
                 });
-            });
-        }
-
+            }
+        });
+    
+        // --- DIỄN HOẠ MARQUEE CHẠY VÔ HẠN ---
+        window.addEventListener('load', function() {
+            if (!isMarqueeInitialized) {
+                if (sliderTrack) sliderTrack.innerHTML += sliderTrack.innerHTML;
+                if (projectList) projectList.innerHTML += projectList.innerHTML;
+                isMarqueeInitialized = true;
+            }
+        });
+    
         // --- BỘ ĐẾM TRUY CẬP HỆ THỐNG ---
         function initTrafficCounter() {
             const startDate = new Date('2026-01-01T00:00:00');
@@ -874,7 +881,7 @@
             const diffDays = Math.ceil(Math.abs(now - startDate) / (1000 * 60 * 60 * 24));
             const avgVisitsPerDay = 145; 
             let baseTotal = diffDays * avgVisitsPerDay;
-
+    
             if (!localStorage.getItem('kh_total_visits')) {
                 localStorage.setItem('kh_total_visits', baseTotal);
                 localStorage.setItem('kh_today_visits', Math.floor(Math.random() * 40) + 60); 
@@ -882,15 +889,20 @@
                 localStorage.setItem('kh_total_visits', parseInt(localStorage.getItem('kh_total_visits')) + 1);
                 localStorage.setItem('kh_today_visits', parseInt(localStorage.getItem('kh_today_visits')) + 1);
             }
-
+    
             const totalVisits = parseInt(localStorage.getItem('kh_total_visits'));
             const todayVisits = parseInt(localStorage.getItem('kh_today_visits'));
-
-            document.getElementById('counter-today').innerText = todayVisits.toLocaleString();
-            document.getElementById('counter-week').innerText = (todayVisits + Math.floor(avgVisitsPerDay * 4.3)).toLocaleString();
-            document.getElementById('counter-month').innerText = (todayVisits + Math.floor(avgVisitsPerDay * 22.5)).toLocaleString();
-            document.getElementById('counter-total').innerText = totalVisits.toLocaleString();
-
+    
+            const counterToday = document.getElementById('counter-today');
+            const counterWeek = document.getElementById('counter-week');
+            const counterMonth = document.getElementById('counter-month');
+            const counterTotal = document.getElementById('counter-total');
+    
+            if(counterToday) counterToday.innerText = todayVisits.toLocaleString();
+            if(counterWeek) counterWeek.innerText = (todayVisits + Math.floor(avgVisitsPerDay * 4.3)).toLocaleString();
+            if(counterMonth) counterMonth.innerText = (todayVisits + Math.floor(avgVisitsPerDay * 22.5)).toLocaleString();
+            if(counterTotal) counterTotal.innerText = totalVisits.toLocaleString();
+    
             function updateOnlineStatus() {
                 if(onlineElement) {
                     onlineElement.innerText = Math.floor(Math.random() * 8) + 2;
@@ -899,12 +911,6 @@
             updateOnlineStatus();
             setInterval(updateOnlineStatus, 4000);
         }
-
-        // Kích hoạt khi DOM sẵn sàng
-        window.addEventListener('DOMContentLoaded', () => {
-            initInternationalization();
-            initTrafficCounter();
-        });
     </script>
 </body>
 </html>
