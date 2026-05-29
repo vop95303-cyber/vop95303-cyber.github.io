@@ -6,8 +6,6 @@
     <title>Kỹ thuật Điện Tàu Thủy - KHANH HUYEN</title>
     
     <link rel="icon" type="image/jpeg" href="image/favicon.jpg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intl-tel-input.css">
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intl-tel-input.min.js"></script>
 
     <style>
         /* Reset và Layout cơ sở */
@@ -283,11 +281,6 @@
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b; font-size: 14px; transition: border-color 0.2s; }
         .form-group input:focus, .form-group textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
 
-        /* Cấu hình khung điện thoại quốc tế */
-        .iti { width: 100%; display: block; }
-        .iti__country-list { background-color: #ffffff; color: #2c3e50; max-width: 320px; z-index: 100; }
-        .form-group input[type="tel"] { padding-left: 52px !important; }
-
         .contact-btn { background-color: #0068ff; color: white; margin-top: 15px; display: block; }
 
         #form-status { margin-bottom: 20px; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
@@ -547,8 +540,7 @@
 
                                 <div class="form-group">
                                     <label for="form-phone" data-i18n="label-phone">Số điện thoại / Zalo *</label>
-                                    <input type="tel" id="form-phone" required>
-                                    <input type="hidden" id="full-phone" name="phone">
+                                    <input type="text" id="form-phone" name="phone" required placeholder="Ví dụ: 0866097xxx">
                                 </div>
 
                                 <div class="form-group">
@@ -597,7 +589,6 @@
         <p>&copy; 2026 CÔNG TY CP THƯƠNG MẠI VÀ SẢN XUẤT KHÁNH HUYỀN. All Rights Reserved.</p>
     </footer>
 
-    <!-- LOGIC JAVASCRIPT ĐA NGÔN NGỮ, KIỂM TRA SỐ ĐIỆN THOẠI & GỬI FORM AJAX -->
     <script>
         // 1. Tự động Nhân đôi Danh sách Dự án (Để chạy Marquee CSS mượt không giật)
         const projectList = document.getElementById('projectList');
@@ -605,18 +596,7 @@
             projectList.innerHTML += projectList.innerHTML;
         }
 
-        // 2. Khởi tạo Khung nhập Số Điện thoại Quốc tế
-        const phoneInput = document.querySelector("#form-phone");
-        const fullPhoneHidden = document.querySelector("#full-phone");
- 
-        const iti = window.intlTelInput(phoneInput, {
-        initialCountry: "vn",
-        preferredCountries: ["vn", "us", "es"],
-        separateDialCode: true,
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
-        });
-
-        // 3. Cơ sở dữ liệu Ngôn ngữ (i18n)
+        // 2. Cơ sở dữ liệu Ngôn ngữ (i18n)
         const translations = {
             vi: {
                 "company-name": "CÔNG TY CP THƯƠNG MẠI VÀ SẢN XUẤT KHÁNH HUYỀN",
@@ -720,7 +700,7 @@
             }
         });
 
-        // 4. Xử lý gửi dữ liệu Form qua AJAX đến Formspree
+        // 3. Xử lý gửi dữ liệu Form qua AJAX đến Formspree
         const form = document.getElementById("ajax-contact-form");
         const statusDiv = document.getElementById("form-status");
 
@@ -728,11 +708,6 @@
             form.addEventListener("submit", function(e) {
                 e.preventDefault();
                 
-                // Đồng bộ số điện thoại đầy đủ (kèm mã quốc gia) vào ô ẩn trước khi gửi
-                if (phoneInput.value.trim()) {
-                    fullPhoneHidden.value = iti.getNumber();
-                }
-
                 const data = new FormData(form);
                 const currentLang = document.documentElement.lang || "vi";
 
