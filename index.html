@@ -7,6 +7,9 @@
     
     <link rel="icon" type="image/jpeg" href="image/favicon.jpg">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intl-tel-input.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intl-tel-input.min.js"></script>
+
     <style>
         /* Reset và Layout cơ sở */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -35,7 +38,7 @@
         .nav-menu a { color: #ebf5fb; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s; }
         .nav-menu a:hover { color: #3498db; }
 
-        /* TỐI ƯU NUT CHỌN NGÔN NGỮ Ở GÓC PHẢI */
+        /* NÚT CHỌN NGÔN NGỮ Ở GÓC PHẢI */
         .lang-selector-wrapper {
             display: flex;
             align-items: center;
@@ -78,7 +81,7 @@
         section { scroll-margin-top: 80px; padding: 60px 0; }
         .section-title { font-size: 24px; color: #2c3e50; margin-bottom: 25px; padding-left: 10px; border-left: 5px solid #3498db; }
         
-        /* --- CSS CHO SLIDER ẢNH CHẠY NGANG VÔ HẠN --- */
+        /* SLIDER ẢNH CHẠY NGANG VÔ HẠN */
         .slider-container {
             width: 100%;
             overflow: hidden;
@@ -123,7 +126,7 @@
             100% { transform: translateX(-50%); } 
         }
 
-        /* Grid Sản phẩm tự động thích ứng khi lên 3 sản phẩm */
+        /* Grid Sản phẩm */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .card { background: white; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; overflow: hidden; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
@@ -227,7 +230,7 @@
             color: #7f8c8d;
         }
 
-        /* --- CSS CHO KHỐI DỰ ÁN CUỘN DỌC TỰ ĐỘNG --- */
+        /* KHỐI DỰ ÁN CUỘN DỌC TỰ ĐỘNG */
         .box-full { background: white; padding: 25px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; }
         
         .project-marquee-container {
@@ -283,6 +286,11 @@
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b; font-size: 14px; transition: border-color 0.2s; }
         .form-group input:focus, .form-group textarea:focus { border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); }
 
+        /* CSS TỐI ƯU RIÊNG CHO KHUNG CHỌN SỐ ĐIỆN THOẠI QUỐC TẾ */
+        .iti { width: 100%; display: block; }
+        .iti__country-list { background-color: #ffffff; color: #2c3e50; max-width: 320px; z-index: 100; }
+        .form-group input[type="tel"] { padding-left: 52px !important; }
+
         .contact-btn { background-color: #0068ff; color: white; margin-top: 15px; display: block; }
 
         #form-status { margin-bottom: 20px; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 600; display: none; text-align: center; }
@@ -322,7 +330,7 @@
     <header>
         <div class="nav-container">
             <div class="logo">
-                <img src="image/lolo.jpg" alt="Logo">
+                <img src="image/logo.jpg" alt="Logo KHANH HUYEN">
                 CÔNG TY CP THƯƠNG MẠI VÀ SẢN XUẤT KHÁNH HUYỀN
             </div>
             <nav>
@@ -335,7 +343,7 @@
                     
                     <li class="lang-selector-wrapper">
                         <select id="lang-select" onchange="changeLanguage(this.value)">
-                            <option value="vi">🇲🇳 VI</option>
+                            <option value="vi">🇻🇳 VI</option>
                             <option value="en">🇬🇧 EN</option>
                             <option value="es">🇪🇸 ES</option>
                         </select>
@@ -360,15 +368,15 @@
                 
                 <div class="slider-container">
                     <div class="slider-track" id="sliderTrack">
-                        <div class="slider-item"><img src="image/busbar.jpg" alt="Hệ thống thanh cái"></div>
-                        <div class="slider-item"><img src="image/dk.jpg" alt="Mạch điều khiển"></div>
-                        <div class="slider-item"><img src="image/dkvacanh.jpg" alt="Mạch điều khiển và cánh tủ"></div>
-                        <div class="slider-item"><img src="image/nganphutai.jpg" alt="Ngăn phụ tải"></div>
-                        <div class="slider-item"><img src="image/phutainganphutai.jpg" alt="Phụ tải tủ điện"></div>
-                        <div class="slider-item"><img src="image/tn.jpg" alt="Tủ nguồn"></div>
-                        <div class="slider-item"><img src="image/tn1.jpg" alt="Chi tiết tủ nguồn"></div>
-                        <div class="slider-item"><img src="image/toantu.jpg" alt="Tổng quan toàn tủ"></div>
-                        <div class="slider-item"><img src="image/trongnganphutai.jpg" alt="Bên trong ngăn phụ tải"></div>
+                        <div class="slider-item"><img src="image/busbar.jpg" alt="Hệ thống thanh cái" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/dk.jpg" alt="Mạch điều khiển" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/dkvacanh.jpg" alt="Mạch điều khiển và cánh tủ" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/nganphutai.jpg" alt="Ngăn phụ tải" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/phutainganphutai.jpg" alt="Phụ tải tủ điện" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/tn.jpg" alt="Tủ nguồn" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/tn1.jpg" alt="Chi tiết tủ nguồn" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/toantu.jpg" alt="Tổng quan toàn tủ" loading="lazy"></div>
+                        <div class="slider-item"><img src="image/trongnganphutai.jpg" alt="Bên trong ngăn phụ tải" loading="lazy"></div>
                     </div>
                 </div>
 
@@ -435,7 +443,7 @@
                         </div>
                     </a>
 
-                    <a href="javascript:void(0);" class="card-3d disabled">
+                    <div class="card-3d disabled">
                         <div class="img-container-3d">
                             <div class="badge-3d badge-waiting" data-i18n="waiting-update">⏳ Chờ update</div>
                         </div>
@@ -443,9 +451,9 @@
                             <h3 data-i18n="model-2-name">Mô hình 3D số 2</h3>
                             <span data-i18n="configuring">Đang cấu hình...</span>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="javascript:void(0);" class="card-3d disabled">
+                    <div class="card-3d disabled">
                         <div class="img-container-3d">
                             <div class="badge-3d badge-waiting" data-i18n="waiting-update">⏳ Chờ update</div>
                         </div>
@@ -453,9 +461,9 @@
                             <h3 data-i18n="model-3-name">Mô hình 3D số 3</h3>
                             <span data-i18n="configuring">Đang cấu hình...</span>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="javascript:void(0);" class="card-3d disabled">
+                    <div class="card-3d disabled">
                         <div class="img-container-3d">
                             <div class="badge-3d badge-waiting" data-i18n="waiting-update">⏳ Chờ update</div>
                         </div>
@@ -463,9 +471,9 @@
                             <h3 data-i18n="model-4-name">Mô hình 3D số 4</h3>
                             <span data-i18n="configuring">Đang cấu hình...</span>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="javascript:void(0);" class="card-3d disabled">
+                    <div class="card-3d disabled">
                         <div class="img-container-3d">
                             <div class="badge-3d badge-waiting" data-i18n="waiting-update">⏳ Chờ update</div>
                         </div>
@@ -473,9 +481,9 @@
                             <h3 data-i18n="model-5-name">Mô hình 3D số 5</h3>
                             <span data-i18n="configuring">Đang cấu hình...</span>
                         </div>
-                    </a>
+                    </div>
 
-                    <a href="javascript:void(0);" class="card-3d disabled">
+                    <div class="card-3d disabled">
                         <div class="img-container-3d">
                             <div class="badge-3d badge-waiting" data-i18n="waiting-update">⏳ Chờ update</div>
                         </div>
@@ -483,7 +491,7 @@
                             <h3 data-i18n="model-6-name">Mô hình 3D số 6</h3>
                             <span data-i18n="configuring">Đang cấu hình...</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -515,9 +523,9 @@
                 <h2 class="section-title" data-i18n="title-activities">Hoạt Động Ngoại Khoa & Phát Triển</h2>
                 <div class="box-full">
                     <ul class="activity-list">
-                        <li data-i18n="act-1">🔹 Nghiên cứu, ứng dụng các giải pháp mô phỏng 3D tương tác trực quan và tự động hóa thiết kế nhằm tối ưu hóa tiến độ bàn giao bản vẽ cho khách hàng.</li>
-                        <li data-i18n="act-2">🔹 Trau dồi ngoại ngữ (Anh ngữ chuyên ngành kỹ thuật và Tây Ban Nha tiếp cận thị trường hàng hải quốc tế).</li>
-                        <li data-i18n="act-3">🔹 Tham gia các phong trào thể thao nâng cao thể lực và rèn luyện tư duy chiến thuật đội nhóm.</li>
+                        <li>🔹 <span data-i18n="act-1">Nghiên cứu, ứng dụng các giải pháp mô phỏng 3D tương tác trực quan và tự động hóa thiết kế nhằm tối ưu hóa tiến độ bàn giao bản vẽ cho khách hàng.</span></li>
+                        <li>🔹 <span data-i18n="act-2">Trau dồi ngoại ngữ (Anh ngữ chuyên ngành kỹ thuật và Tây Ban Nha tiếp cận thị trường hàng hải quốc tế).</span></li>
+                        <li>🔹 <span data-i18n="act-3">Tham gia các phong trào thể thao nâng cao thể lực và rèn luyện tư duy chiến thuật đội nhóm.</span></li>
                     </ul>
                 </div>
             </div>
@@ -540,10 +548,13 @@
                                     <label for="form-name" data-i18n="label-name">Họ và tên *</label>
                                     <input type="text" id="form-name" name="name" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="form-phone" data-i18n="label-phone">Số điện thoại / Zalo *</label>
-                                    <input type="tel" id="form-phone" name="phone" required>
+                                    <input type="tel" id="form-phone" required>
+                                    <input type="hidden" id="full-phone" name="phone">
                                 </div>
+
                                 <div class="form-group">
                                     <label for="form-msg" data-i18n="label-msg">Nội dung yêu cầu *</label>
                                     <textarea id="form-msg" name="message" rows="4" required data-i18n="placeholder-msg" placeholder="Ví dụ: Cần bóc tách bản vẽ và báo giá hệ thống tủ điện chính..."></textarea>
@@ -614,55 +625,6 @@
             }
         });
 
-        // --- XỬ LÝ GỬI FORM ĐĂNG KÝ ---
-        const form = document.getElementById("ajax-contact-form");
-        const status = document.getElementById("form-status");
-        const submitBtn = document.getElementById("submit-btn");
-
-        if (form) {
-            form.addEventListener("submit", function(event) {
-                event.preventDefault(); 
-                
-                const currentLang = localStorage.getItem('kh_selected_lang') || 'vi';
-                submitBtn.disabled = true;
-                submitBtn.innerText = currentLang === 'vi' ? "⏳ Đang gửi yêu cầu..." : (currentLang === 'en' ? "⏳ Sending request..." : "⏳ Enviando solicitud...");
-                
-                const formElements = form.querySelectorAll("input, textarea");
-                formElements.forEach(el => el.disabled = true);
-                
-                status.className = ""; 
-                status.style.display = "none";
-                const data = new FormData(form);
-                
-                fetch(form.action, {
-                    method: form.method,
-                    body: data,
-                    headers: { 'Accept': 'application/json' }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        status.innerText = currentLang === 'vi' ? "🚀 Gửi thành công! Chúng tôi sẽ liên hệ lại ngay." : (currentLang === 'en' ? "🚀 Sent successfully! We will contact you soon." : "🚀 ¡Enviado con éxito! Nos pondremos en contacto pronto.");
-                        status.className = "success";
-                        form.reset(); 
-                        setTimeout(() => { status.className = ""; status.style.display = "none"; }, 5000);
-                    } else {
-                        status.innerText = currentLang === 'vi' ? "❌ Gửi thất bại. Thử lại sau." : "❌ Submission failed. Try again later.";
-                        status.className = "error";
-                    }
-                })
-                .catch(error => {
-                    status.innerText = "❌ Network error.";
-                    status.className = "error";
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = currentLang === 'vi' ? "🚀 Gửi Yêu Cầu Tư Vấn" : (currentLang === 'en' ? "🚀 Submit Request" : "🚀 Enviar Solicitud");
-                    formElements.forEach(el => el.disabled = false);
-                    status.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                });
-            });
-        }
-
         // --- CƠ SỞ DỮ LIỆU ĐA NGÔN NGỮ (DICTIONARY) ---
         const resources = {
             vi: {
@@ -698,9 +660,10 @@
                 "proj-8": "Thiết kế kỹ thuật hệ thống tủ điện phân phối vùng (DB) đạt tiêu chuẩn cấp bảo vệ kín nước buồng máy.",
                 "proj-9": "Tính toán phụ tải, lên sơ đồ nguyên lý tủ điện phân phối chiếu sáng và thông gió hành lang tàu.",
                 "proj-10": "Tích hợp và cấu hình hệ thống quản lý năng lượng máy phát tự động, đảm bảo an toàn lưới điện.",
-                "act-1": "🔹 Nghiên cứu, ứng dụng các giải pháp mô phỏng 3D tương tác trực quan và tự động hóa thiết kế nhằm tối ưu hóa tiến độ bàn giao bản vẽ cho khách hàng.",
-                "act-2": "🔹 Trau dồi ngoại ngữ (Anh ngữ chuyên ngành kỹ thuật và Tây Ban Nha tiếp cận thị trường hàng hải quốc tế).",
-                "act-3": "🔹 Tham gia các phong trào thể thao nâng cao thể lực và rèn luyện tư duy chiến thuật đội nhóm."
+                "act-1": "Nghiên cứu, ứng dụng các giải pháp mô phỏng 3D tương tác trực quan và tự động hóa thiết kế nhằm tối ưu hóa tiến độ bàn giao bản vẽ cho khách hàng.",
+                "act-2": "Trau dồi ngoại ngữ (Anh ngữ chuyên ngành kỹ thuật và Tây Ban Nha tiếp cận thị trường hàng hải quốc tế).",
+                "act-3": "Tham gia các phong trào thể thao nâng cao thể lực và rèn luyện tư duy chiến thuật đội nhóm.",
+                "msg-sending": "⏳ Đang gửi yêu cầu...", "msg-success": "🚀 Gửi thành công! Chúng tôi sẽ liên hệ lại ngay.", "msg-failed": "❌ Gửi thất bại. Thử lại sau."
             },
             en: {
                 "nav-products": "Products", "nav-models": "3D Models", "nav-projects": "Projects", "nav-activities": "Activities", "nav-contact": "Contact",
@@ -735,9 +698,10 @@
                 "proj-8": "Technical design of distribution boards (DB) meeting absolute watertight requirements inside engine rooms.",
                 "proj-9": "Calculated load analysis, electrical load charts, and engineered layout for corridor ventilation and lighting panels.",
                 "proj-10": "Integrated and programmed automatic power management systems (PMS) to safeguard grid distribution stability.",
-                "act-1": "🔹 Researching and implementing interactive 3D visualization and automated design macros to accelerate blueprint turnaround time.",
-                "act-2": "🔹 Enhancing language skills (Technical English and Spanish to access international maritime markets).",
-                "act-3": "🔹 Participating in sports activities to enhance physical endurance and cultivate team tactical thinking."
+                "act-1": "Researching and implementing interactive 3D visualization and automated design macros to accelerate blueprint turnaround time.",
+                "act-2": "Enhancing language skills (Technical English and Spanish to access international maritime markets).",
+                "act-3": "Participating in sports activities to enhance physical endurance and cultivate team tactical thinking.",
+                "msg-sending": "⏳ Sending request...", "msg-success": "🚀 Sent successfully! We will contact you soon.", "msg-failed": "❌ Submission failed. Try again later."
             },
             es: {
                 "nav-products": "Productos", "nav-models": "Modelos 3D", "nav-projects": "Proyectos", "nav-activities": "Actividades", "nav-contact": "Contacto",
@@ -772,11 +736,14 @@
                 "proj-8": "Diseño técnico de tableros de distribución (DB) con requisitos estancos absolutos para salas de máquinas.",
                 "proj-9": "Análisis de balance de cargas y diseño de planos de distribución para iluminación y ventilación de acomodaciones.",
                 "proj-10": "Integración y programación de sistemas de gestión de energía (PMS) para salvaguardar la estabilidad de la red eléctrica.",
-                "act-1": "🔹 Investigación y aplicación de soluciones de modelado 3D interactivo y macros de automatización para optimizar la entrega de planos.",
-                "act-2": "🔹 Fortalecimiento de idiomas (Inglés técnico y Español enfocado al mercado marítimo internacional).",
-                "act-3": "🔹 Participación en actividades deportivas para mejorar la resistencia física y cultivar el pensamiento táctico en equipo."
+                "act-1": "Investigación y aplicación de soluciones de modelado 3D interactivo y macros de automatización para optimizar la entrega de planos.",
+                "act-2": "Fortalecimiento de idiomas (Inglés técnico y Español enfocado al mercado marítimo internacional).",
+                "act-3": "Participación en actividades deportivas para mejorar la resistencia física y cultivar el pensamiento táctico en equipo.",
+                "msg-sending": "⏳ Enviando solicitud...", "msg-success": "🚀 ¡Enviado con éxito! Nos pondremos en contacto pronto.", "msg-failed": "❌ Envío fallido. Inténtelo más tarde."
             }
         };
+
+        let currentFormStatusKey = "";
 
         // --- CẬP NHẬT GIAO DIỆN THEO NGÔN NGỮ ---
         function updateContent(lang) {
@@ -795,6 +762,11 @@
             });
             document.getElementById('lang-select').value = lang;
             document.documentElement.lang = lang;
+
+            const status = document.getElementById("form-status");
+            if(status && currentFormStatusKey && resources[lang][currentFormStatusKey]) {
+                status.innerText = resources[lang][currentFormStatusKey];
+            }
         }
 
         function changeLanguage(lang) {
@@ -802,7 +774,8 @@
             updateContent(lang);
         }
 
-        // --- KHỞI TẠO ĐA NGÔN NGỮ THÍCH ỨNG ---
+        // --- KHỞI TẠO ĐA NGÔN NGỮ & KHỞI TẠO INPUT ĐIỆN THOẠI QUỐC TẾ ---
+        let iti;
         function initInternationalization() {
             const savedLang = localStorage.getItem('kh_selected_lang');
             if (savedLang) {
@@ -817,9 +790,102 @@
                 }
                 updateContent(defaultLang);
             }
+
+            // Kích hoạt intl-tel-input
+            const phoneInput = document.querySelector("#form-phone");
+            const fullPhoneInput = document.querySelector("#full-phone");
+
+            if (phoneInput) {
+                iti = window.intlTelInput(phoneInput, {
+                    initialCountry: "auto",
+                    geoIpLookup: function(success, failure) {
+                        fetch("https://ipapi.co/json/")
+                            .then(res => res.json())
+                            .then(data => success(data.country_code))
+                            .catch(() => success("vn"));
+                    },
+                    preferredCountries: ["vn", "us", "es", "gb"],
+                    separateDialCode: true,
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+                });
+
+                // Lắng nghe sự kiện để tự động gộp đầu số quốc gia vào thẻ ẩn khi người dùng nhập xong
+                phoneInput.addEventListener('blur', function() {
+                    if (iti.isValidNumber()) {
+                        fullPhoneInput.value = iti.getNumber(); 
+                    } else {
+                        fullPhoneInput.value = iti.getDialCode() + " " + phoneInput.value;
+                    }
+                });
+            }
         }
 
         window.addEventListener('DOMContentLoaded', initInternationalization);
+
+        // --- XỬ LÝ GỬI FORM ĐĂNG KÝ QUA AJAX ---
+        const form = document.getElementById("ajax-contact-form");
+        const status = document.getElementById("form-status");
+        const submitBtn = document.getElementById("submit-btn");
+
+        if (form) {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); 
+                
+                const currentLang = localStorage.getItem('kh_selected_lang') || 'vi';
+                
+                // Đồng bộ số điện thoại lần cuối trước khi submit
+                const fullPhoneInput = document.querySelector("#full-phone");
+                const phoneInput = document.querySelector("#form-phone");
+                if (iti) {
+                    fullPhoneInput.value = iti.getNumber() || (iti.getDialCode() + " " + phoneInput.value);
+                }
+
+                submitBtn.disabled = true;
+                currentFormStatusKey = "msg-sending";
+                submitBtn.innerText = resources[currentLang][currentFormStatusKey];
+                
+                const formElements = form.querySelectorAll("input, textarea");
+                formElements.forEach(el => el.disabled = true);
+                
+                status.className = ""; 
+                status.style.display = "none";
+                const data = new FormData(form);
+                
+                fetch(form.action, {
+                    method: form.method,
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        currentFormStatusKey = "msg-success";
+                        status.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
+                        status.className = "success";
+                        form.reset(); 
+                        setTimeout(() => { 
+                            status.className = ""; 
+                            status.style.display = "none"; 
+                            currentFormStatusKey = "";
+                        }, 6000);
+                    } else {
+                        currentFormStatusKey = "msg-failed";
+                        status.innerText = resources[localStorage.getItem('kh_selected_lang') || 'vi'][currentFormStatusKey];
+                        status.className = "error";
+                    }
+                })
+                .catch(error => {
+                    status.innerText = "Network error. Please try again.";
+                    status.className = "error";
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    const activeLang = localStorage.getItem('kh_selected_lang') || 'vi';
+                    submitBtn.innerText = resources[activeLang]["btn-submit-form"];
+                    formElements.forEach(el => el.disabled = false);
+                    status.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
+        }
 
         // --- BỘ ĐẾM TRUY CẬP HỆ THỐNG ---
         function initTrafficCounter() {
