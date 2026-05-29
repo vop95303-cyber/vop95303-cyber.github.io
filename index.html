@@ -601,8 +601,8 @@
         <p>&copy; 2026 KHANH HUYEN. <span data-i18n="footer-text">Thiết kế hệ thống điện và cơ khí tàu thủy chuyên nghiệp.</span></p>
     </footer>
     
-    <script>
-        // --- KHAI BÁO BIẾN DOM TẬP TRUNG (Chỉ khai báo, không gán trực tiếp để tránh null) ---
+        <script>
+        // --- KHAI BÁO BIẾN DOM TẬP TRUNG ---
         let sliderTrack, projectList, contactForm, formStatus, submitBtn, phoneInput, fullPhoneInput, onlineElement;
         let iti;
         let currentFormStatusKey = "";
@@ -755,9 +755,8 @@
             updateContent(lang);
         }
     
-        // --- GÁN BIẾN DOM VÀ KHỞI TẠO HỆ THỐNG KHI DOM SẴN SÀNG ---
+        // --- KHỞI TẠO HỆ THỐNG KHI DOM SẴN SÀNG ---
         window.addEventListener('DOMContentLoaded', () => {
-            // Gán phần tử DOM thực tế sau khi cây DOM đã dựng xong
             sliderTrack = document.getElementById('sliderTrack');
             projectList = document.getElementById('projectList');
             contactForm = document.getElementById("ajax-contact-form");
@@ -767,7 +766,7 @@
             fullPhoneInput = document.querySelector("#full-phone");
             onlineElement = document.getElementById('counter-online');
     
-            // 1. Khởi tạo đa ngôn ngữ và Ô điện thoại quốc tế
+            // Khởi tạo ngôn ngữ mặc định
             const savedLang = localStorage.getItem('kh_selected_lang');
             if (savedLang) {
                 updateContent(savedLang);
@@ -779,15 +778,10 @@
                 updateContent(defaultLang);
             }
     
+            // CẤU HÌNH KIÊN CỐ CHO ĐẦU SỐ QUỐC GIA (Fix lỗi GitHub Pages)
             if (phoneInput) {
                 iti = window.intlTelInput(phoneInput, {
-                    initialCountry: "auto",
-                    geoIpLookup: function(success, failure) {
-                        fetch("https://ipapi.co/json/")
-                            .then(res => res.json())
-                            .then(data => success(data.country_code))
-                            .catch(() => success("vn"));
-                    },
+                    initialCountry: "vn", // Đặt mặc định trực tiếp là Việt Nam thay vì "auto" để không bị lỗi API chặn CORS
                     preferredCountries: ["vn", "us", "es", "gb"],
                     separateDialCode: true,
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
@@ -802,10 +796,9 @@
                 });
             }
     
-            // 2. Khởi tạo Bộ đếm lượt truy cập
             initTrafficCounter();
     
-            // 3. Khởi nghiệp cấu hình gửi Form
+            // Xử lý gửi form qua Ajax
             if (contactForm) {
                 contactForm.addEventListener("submit", function(event) {
                     event.preventDefault(); 
@@ -912,5 +905,6 @@
             setInterval(updateOnlineStatus, 4000);
         }
     </script>
+
 </body>
 </html>
